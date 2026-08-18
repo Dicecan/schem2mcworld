@@ -1,7 +1,6 @@
 # Gradle
 .gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
 
 # Compiled class files
 *.class
@@ -17,6 +16,9 @@ build/
 *.zip
 *.tar.gz
 *.rar
+
+# Allow wrapper and pre-built CLI jar
+!gradle/wrapper/gradle-wrapper.jar
 !schem2mcworld.jar
 
 # Virtual machine crash logs
@@ -38,6 +40,5 @@ out/
 Thumbs.db
 
 # Test generated artifacts
-build/
 output/
 *.mcworld
