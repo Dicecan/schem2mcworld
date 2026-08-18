@@ -120,7 +120,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.Dicecan:schem2mcworld:1.0.0")
+    implementation("com.github.Dicecan:schem2mcworld:1.0.1")
 }
 ```
 
@@ -132,7 +132,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.Dicecan:schem2mcworld:1.0.0'
+    implementation 'com.github.Dicecan:schem2mcworld:1.0.1'
 }
 ```
 
@@ -149,7 +149,7 @@ dependencies {
     <dependency>
         <groupId>com.github.Dicecan</groupId>
         <artifactId>schem2mcworld</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </dependency>
 </dependencies>
 ```
