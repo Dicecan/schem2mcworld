@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.github.Dicecan"
-version = "1.0.3"
+version = "1.0.4"
 
 repositories {
     mavenCentral()
@@ -62,7 +62,7 @@ publishing {
 tasks.register<Jar>("fatJar") {
     archiveBaseName.set("schem2mcworld")
     archiveClassifier.set("all")
-    archiveVersion.set("1.0.3")
+    archiveVersion.set("1.0.4")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {

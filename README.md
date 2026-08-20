@@ -120,7 +120,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.Dicecan:schem2mcworld:1.0.3")
+    implementation("com.github.Dicecan:schem2mcworld:1.0.4")
 }
 ```
 
@@ -132,7 +132,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.Dicecan:schem2mcworld:1.0.3'
+    implementation 'com.github.Dicecan:schem2mcworld:1.0.4'
 }
 ```
 
@@ -149,7 +149,7 @@ dependencies {
     <dependency>
         <groupId>com.github.Dicecan</groupId>
         <artifactId>schem2mcworld</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </dependency>
 </dependencies>
 ```
@@ -208,9 +208,34 @@ fun convertSchematic(context: Context, inputUri: Uri, outputUri: Uri) {
 }
 ```
 
+### 3. 注入已有世界存档（增量合并原有建筑与地形）
+
+```kotlin
+// 将投影无缝绘制到现有的基岩版世界存档中，不破坏已有地形与建筑
+val result = McworldConverter.builder()
+    .baseWorld(File("my_survival_world.mcworld"))
+    .addSchematic(File("castle.schem"), x = 100, y = 64, z = 200)
+    .convert(File("my_survival_world_updated.mcworld"))
+```
+
 ---
 
-### 3. 自定义世界分层示例
+### 4. 多投影批量导入（自定义独立 X / Y / Z 坐标）
+
+```kotlin
+// 同时导入多个不同格式的投影，各自放置在互不冲突的坐标处
+val result = McworldConverter.builder()
+    .worldName("Epic Metropolis")
+    .terrain(WorldTerrainType.SUPERFLAT)
+    .addSchematic(File("town_hall.schem"), x = 0, y = 64, z = 0)
+    .addSchematic(File("tower.litematic"), x = 150, y = 64, z = 200)
+    .addSchematic(File("farm.schematic"), x = -100, y = 64, z = -150)
+    .convert(File("metropolis.mcworld"))
+```
+
+---
+
+### 5. 自定义世界分层示例
 
 ```kotlin
 import com.github.schem2mcworld.api.WorldLayer

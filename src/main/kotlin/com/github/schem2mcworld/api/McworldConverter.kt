@@ -32,11 +32,12 @@ class McworldConverter private constructor(
         return writer.writeToStream(schematic, options, outputStream)
     }
 
-    private fun parseSchematic(): SchematicData {
+    private fun parseSchematic(): SchematicData? {
         return when {
             sourceFile != null -> ParserFactory.parse(sourceFile)
             sourceStream != null -> ParserFactory.parse(sourceStream)
-            else -> throw IllegalStateException("Neither source file nor source input stream was provided.")
+            options.placements.isNotEmpty() -> null
+            else -> throw IllegalStateException("Neither source file, input stream, nor schematic placements were provided.")
         }
     }
 
@@ -77,10 +78,47 @@ class McworldConverter private constructor(
         private var fallbackBlock: BedrockBlockState = BedrockBlockState.STONE
         private var modFilterPolicy: ModFilterPolicy = ModFilterPolicy.REPLACE_WITH_FALLBACK
         private var customMapper: BlockStateMapper? = null
+        private var baseWorld: File? = null
+        private val placements = mutableListOf<SchematicPlacement>()
+        private var pasteAir: Boolean = false
 
         fun source(file: File) = apply { this.sourceFile = file }
 
         fun source(inputStream: InputStream) = apply { this.sourceStream = inputStream }
+
+        fun baseWorld(file: File) = apply { this.baseWorld = file }
+
+        fun addSchematic(
+            file: File,
+            x: Int = 0,
+            y: Int = 64,
+            z: Int = 0,
+            alignment: AlignmentMode = AlignmentMode.ABSOLUTE,
+            pasteAir: Boolean = false
+        ) = apply {
+            this.placements.add(SchematicPlacement(file, Vector3i(x, y, z), alignment, pasteAir))
+        }
+
+        fun addSchematic(
+            inputStream: InputStream,
+            x: Int = 0,
+            y: Int = 64,
+            z: Int = 0,
+            alignment: AlignmentMode = AlignmentMode.ABSOLUTE,
+            pasteAir: Boolean = false
+        ) = apply {
+            this.placements.add(SchematicPlacement(inputStream, Vector3i(x, y, z), alignment, pasteAir))
+        }
+
+        fun addSchematic(placement: SchematicPlacement) = apply {
+            this.placements.add(placement)
+        }
+
+        fun addSchematics(placementsList: List<SchematicPlacement>) = apply {
+            this.placements.addAll(placementsList)
+        }
+
+        fun pasteAir(paste: Boolean) = apply { this.pasteAir = paste }
 
         fun worldName(name: String) = apply { this.worldName = name }
 
@@ -148,7 +186,10 @@ class McworldConverter private constructor(
                 targetVersion = targetVersion,
                 fallbackBlock = fallbackBlock,
                 modFilterPolicy = modFilterPolicy,
-                customMapper = customMapper
+                customMapper = customMapper,
+                baseWorld = baseWorld,
+                placements = placements.toList(),
+                pasteAir = pasteAir
             )
             return McworldConverter(sourceFile, sourceStream, options)
         }

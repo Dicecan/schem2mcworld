@@ -5,6 +5,7 @@ import com.github.schem2mcworld.core.mapper.ModFilterPolicy
 import com.github.schem2mcworld.core.model.BedrockBlockState
 import com.github.schem2mcworld.core.model.BedrockVersion
 import com.github.schem2mcworld.core.model.Vector3i
+import java.io.File
 
 data class ConversionOptions(
     val worldName: String = "Imported Schematic",
@@ -15,5 +16,8 @@ data class ConversionOptions(
     val targetVersion: BedrockVersion = BedrockVersion.LATEST,
     val fallbackBlock: BedrockBlockState = BedrockBlockState.STONE,
     val modFilterPolicy: ModFilterPolicy = ModFilterPolicy.REPLACE_WITH_FALLBACK,
-    val customMapper: BlockStateMapper? = null
+    val customMapper: BlockStateMapper? = null,
+    val baseWorld: File? = null,
+    val placements: List<SchematicPlacement> = emptyList(),
+    val pasteAir: Boolean = false
 )

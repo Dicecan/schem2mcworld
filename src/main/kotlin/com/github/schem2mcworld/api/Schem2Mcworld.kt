@@ -71,6 +71,27 @@ object Schem2Mcworld {
         convert(input, output, worldName = worldName, terrain = terrain, alignment = alignment, targetVersion = targetVersion)
         return output.toByteArray()
     }
+
+    @JvmStatic
+    @JvmOverloads
+    fun importIntoWorld(
+        baseWorld: File,
+        schematics: List<SchematicPlacement>,
+        destination: File = baseWorld,
+        targetVersion: BedrockVersion = BedrockVersion.V1_21,
+        modFilterMode: ModFilterMode = ModFilterMode.REPLACE_WITH_FALLBACK
+    ): ConversionResult {
+        val builder = McworldConverter.builder()
+            .baseWorld(baseWorld)
+            .targetVersion(targetVersion)
+            .modFilterMode(modFilterMode)
+
+        for (placement in schematics) {
+            builder.addSchematic(placement)
+        }
+
+        return builder.convert(destination)
+    }
 }
 
 fun File.convertToMcworld(
