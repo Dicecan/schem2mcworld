@@ -18,7 +18,7 @@
 
 ## 📖 简介 (Introduction)
 
-`schem2mcworld` 是一个现代化的 Minecraft 结构转换库与命令行工具。它可以将 Java 版的 **`.schem`**（1.13+ Sponge / WorldEdit 规范）与 **`.schematic`**（1.12.2 及以前 Legacy MCEdit 规范）投影文件，直接编译生成带有 LevelDB 数据库与 SubChunk 调色板位打包编码的基岩版世界存档（**`.mcworld`**）。
+`schem2mcworld` 是一个现代化的 Minecraft 结构转换库与命令行工具。它可以将 Java 版的 **`.litematic`**（Litematica 投影规范）、**`.schem`**（1.13+ Sponge / WorldEdit 规范）与 **`.schematic`**（1.12.2 及以前 Legacy MCEdit 规范）投影文件，直接编译生成带有 LevelDB 数据库与 SubChunk 调色板位打包编码的基岩版世界存档（**`.mcworld`**）。
 
 双击生成的 `.mcworld` 文件即可在 Windows / Android / iOS《我的世界》基岩版中**一键自动导入并游玩**！
 
@@ -57,8 +57,8 @@
 ## 🚀 快速启动 (Quick Start)
 
 ### 方式一：Windows 用户双击 `start.cmd`（最简单）
-- **直接双击 `start.cmd`**：自动唤起带有 ASCII 艺术字符与交互式菜单的控制台，按提示将 `.schem` 或 `.schematic` 文件**拖入窗口**即可一键转换！
-- **拖拽文件转换**：直接将 `.schem` 文件**拖放到 `start.cmd` 图标上**，系统会自动以超平坦地面对齐模式瞬间完成转换！
+- **直接双击 `start.cmd`**：自动唤起带有 ASCII 艺术字符与交互式菜单的控制台，按提示将 `.litematic`、`.schem` 或 `.schematic` 文件**拖入窗口**即可一键转换！
+- **拖拽文件转换**：直接将 `.litematic` 或 `.schem` 文件**拖放到 `start.cmd` 图标上**，系统会自动以超平坦地面对齐模式瞬间完成转换！
 
 ### 方式二：打包与运行独立单文件 JAR (Fat JAR)
 - **编译打包**：执行 `.\gradlew.bat fatJar`，在 `build/libs/` 目录下生成包含全部依赖与 Mappings 的独立单文件 `schem2mcworld-1.0.0-all.jar`。
@@ -120,7 +120,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.Dicecan:schem2mcworld:1.0.2")
+    implementation("com.github.Dicecan:schem2mcworld:1.0.3")
 }
 ```
 
@@ -132,7 +132,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.Dicecan:schem2mcworld:1.0.2'
+    implementation 'com.github.Dicecan:schem2mcworld:1.0.3'
 }
 ```
 
@@ -149,7 +149,7 @@ dependencies {
     <dependency>
         <groupId>com.github.Dicecan</groupId>
         <artifactId>schem2mcworld</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
     </dependency>
 </dependencies>
 ```
@@ -274,13 +274,14 @@ val result = McworldConverter.builder()
 ```
 
 测试覆盖范围包括：
+- `LitematicaSchematicParserTest`：Litematica (.litematic) 多区域、负尺寸与 64-bit 连续位流解包测试
 - `LegacySchematicParserTest`：1.12.2 旧版 BlockID + Data + AddBlocks nibble 数组解析测试
 - `SpongeSchematicParserTest`：1.13+ Sponge V1/V2/V3 VarInt 调色板解析测试
 - `BlockStateMapperTest`：全状态精确匹配、属性转换、智能 Fallback 拦截测试
 - `ModFilterPolicyTest`：模组方块剔除与安全降级测试
 - `SubChunkEncoderTest`：1, 2, 3, 4, 5, 6, 8, 16 bits/block 调色板位数组打包解包测试
 - `TerrainAndCoordinateTest`：虚空、超平坦、海洋、自定义分层及跨版本 Y 轴计算测试
-- `McworldConverterTest`：端到端 `.schem` / `.schematic` 到 `.mcworld` 真实打包解包校验测试
+- `McworldConverterTest`：端到端 `.litematic` / `.schem` / `.schematic` 到 `.mcworld` 真实打包解包校验测试
 
 ---
 

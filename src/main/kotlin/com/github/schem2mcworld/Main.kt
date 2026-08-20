@@ -51,7 +51,7 @@ private fun runInteractiveMode() {
     val scanner = Scanner(System.`in`)
     while (true) {
         println("\n[+] 交互模式就绪。")
-        print("[?] 请将 .schem 或 .schematic 文件直接【拖入此窗口】并回车 (或输入 q 退出): ")
+        print("[?] 请将 .schem, .schematic 或 .litematic 文件直接【拖入此窗口】并回车 (或输入 q 退出): ")
         val rawInput = scanner.nextLine().trim().replace("\"", "").replace("'", "")
         if (rawInput.equals("q", ignoreCase = true) || rawInput.isEmpty()) {
             println("感谢使用，再见！")
@@ -339,7 +339,7 @@ fun parseCustomLayers(input: String): List<WorldLayer> {
 private fun printUsage() {
     println("""
         用法：
-          schem2mcworld.jar <输入文件.schem|.schematic> [输出文件.mcworld] [选项]
+          schem2mcworld.jar <输入文件.schem|.schematic|.litematic> [输出文件.mcworld] [选项]
 
         世界类型选项 (--terrain, -t)：
           void             纯虚空世界（默认）

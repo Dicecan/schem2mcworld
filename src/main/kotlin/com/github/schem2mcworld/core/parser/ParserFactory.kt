@@ -12,19 +12,25 @@ object ParserFactory {
 
     val legacyParser = LegacySchematicParser()
     val spongeParser = SpongeSchematicParser()
+    val litematicaParser = LitematicaSchematicParser()
 
     fun parse(inputStream: InputStream): SchematicData {
         val bytes = inputStream.readBytes()
         val format = detectFormat(bytes)
 
         val parser: SchematicParser = when (format) {
+            SchematicFormat.LITEMATICA_SCHEMATIC -> litematicaParser
             SchematicFormat.SPONGE_SCHEMATIC -> spongeParser
             SchematicFormat.LEGACY_SCHEMATIC -> legacyParser
             SchematicFormat.UNKNOWN -> {
                 try {
-                    return spongeParser.parse(ByteArrayInputStream(bytes))
-                } catch (e: Exception) {
-                    legacyParser
+                    return litematicaParser.parse(ByteArrayInputStream(bytes))
+                } catch (e1: Exception) {
+                    try {
+                        return spongeParser.parse(ByteArrayInputStream(bytes))
+                    } catch (e2: Exception) {
+                        legacyParser
+                    }
                 }
             }
         }
@@ -36,6 +42,7 @@ object ParserFactory {
         val ext = file.extension.lowercase()
         return file.inputStream().use { stream ->
             when (ext) {
+                "litematic" -> litematicaParser.parse(stream)
                 "schem" -> spongeParser.parse(stream)
                 "schematic" -> legacyParser.parse(stream)
                 else -> parse(stream)
@@ -51,8 +58,11 @@ object ParserFactory {
             val paletteTag = root.get("Palette")
             val blockDataTag = root.get("BlockData")
             val schematicTag = root.get("Schematic") as? CompoundTag
+            val regionsTag = root.get("Regions")
 
-            if (blocksTag is ByteArrayTag && (root.containsKey("Data") || root.containsKey("Materials") || root.containsKey("Width"))) {
+            if (regionsTag is CompoundTag && (root.containsKey("Version") || root.containsKey("Metadata") || root.containsKey("MinecraftDataVersion") || regionsTag.size() > 0)) {
+                SchematicFormat.LITEMATICA_SCHEMATIC
+            } else if (blocksTag is ByteArrayTag && (root.containsKey("Data") || root.containsKey("Materials") || root.containsKey("Width"))) {
                 SchematicFormat.LEGACY_SCHEMATIC
             } else if (paletteTag != null || blockDataTag != null ||
                 (schematicTag?.containsKey("Palette") == true) ||
